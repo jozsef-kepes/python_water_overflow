@@ -34,8 +34,32 @@ def sum_glass_content(glass_array: List):
     return sum_millilitres
 
 
-def row_weight_calculation(glass_row: List):
-    return []
+def row_weight_calculation(previous_row: List):
+    """Return a row of glasses with weight's calculated based on the previous row"""
+    row_num = len(previous_row) + 1
+    row = []
+
+    num_glasses = len(previous_row) + 1
+    iter_row = row_num
+
+    if len(previous_row) <= 1:
+        for glass in range(num_glasses):
+            new_glass = Glass(0, 0, 1)
+            row.append(new_glass)
+            new_glass.set_contents(250)
+        return row
+
+    for glass in range(num_glasses):
+        if (iter_row > 1) and (glass != 0) and (glass != num_glasses-1):
+            weight = previous_row[glass-1].weight + \
+                previous_row[glass].weight
+            new_glass = Glass(iter_row, glass, weight)
+            row.append(new_glass)
+        else:
+            new_glass = Glass(iter_row, glass, 1)
+            row.append(new_glass)
+
+    return row
 
 
 def pour(jug_capacity):
@@ -52,15 +76,7 @@ def pour(jug_capacity):
             row = []
             next_row = []
 
-            for glass in range(num_glasses):
-                if (iter_row > 1) and (glass != 0) and (glass != num_glasses-1):
-                    weight = content[iter_row-1][glass-1].weight + \
-                        content[iter_row-1][glass].weight
-                    new_glass = Glass(iter_row, glass, weight)
-                    row.append(new_glass)
-                else:
-                    new_glass = Glass(iter_row, glass, 1)
-                    row.append(new_glass)
+            row = row_weight_calculation(content[iter_row-1])
 
             sum_weight = 0
             for glass in row:
@@ -78,16 +94,7 @@ def pour(jug_capacity):
 
                     # do next row weight calc
                     if not weight_calcd:
-                        for next_row_glass in range(num_glasses+1):
-                            if (next_row_glass != 0) and (next_row_glass != num_glasses):
-                                weight = row[next_row_glass-1].weight + \
-                                    row[next_row_glass].weight
-                                new_glass = Glass(
-                                    iter_row, next_row_glass, weight)
-                                next_row.append(new_glass)
-                            else:
-                                new_glass = Glass(iter_row, next_row_glass, 1)
-                                next_row.append(new_glass)
+                        next_row = row_weight_calculation(row)
                         weight_calcd = True
 
                     # calc child split
@@ -107,17 +114,11 @@ def pour(jug_capacity):
         else:
             input_millilitres -= (num_glasses*capacity)
             row = []
-            for glass in range(num_glasses):
-                if (iter_row > 1) and (glass != 0) and (glass != num_glasses-1):
-                    weight = content[iter_row-1][glass-1].weight + \
-                        content[iter_row-1][glass].weight
-                    new_glass = Glass(iter_row, glass, weight)
-                    row.append(new_glass)
-                    new_glass.set_contents(0.25 * 1000)
-                else:
-                    new_glass = Glass(iter_row, glass, 1)
-                    row.append(new_glass)
-                    new_glass.set_contents(0.25 * 1000)
+            row = row_weight_calculation(
+                content[-1] if content else content)
+
+            for glass in row:
+                glass.set_contents(250)
 
             content.append(row)
             iter_row += 1
