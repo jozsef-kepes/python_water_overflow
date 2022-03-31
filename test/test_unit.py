@@ -11,11 +11,15 @@ import pytest
 def unit_test_flow():
      """Perform unit tests for water overflow problem"""
 
-     input_litres = 1.5
-     row = 1
-     glass = 1
-     assert calculate(input_litres, row, glass) == 1
-     assert calculate(input_litres, row, glass) == 2
-     assert calculate(input_litres, row, glass) == 3
-     assert calculate(input_litres, row, glass) == 4
-     assert calculate(input_litres, row, glass) == 5
+     # calculate(input_litres, row, glass) == result
+     assert calculate(0, 1, 2) == 0
+
+     assert calculate(0.1, 1, 1) == 0.1
+
+     assert calculate(1, 4, 2) == 
+
+     assert calculate(2.5, 6, 7) == 
+
+     assert calculate(20, 6, 7) == 
+
+     assert calculate(100, 6, 7) == 
