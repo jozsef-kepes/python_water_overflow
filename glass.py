@@ -29,3 +29,7 @@ class Glass:
     def get_weight(self):
         """Return weight of glass"""
         return self.weight
+
+    def get_contents(self):
+        """Return weight of glass"""
+        return self.contents
